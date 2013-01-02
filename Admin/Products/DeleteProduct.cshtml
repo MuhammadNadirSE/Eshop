@@ -1,0 +1,28 @@
+﻿@{
+Layout = "~/Shared/Layout/_AdminLayout.cshtml";
+Page.Title = "Delete Product";
+var productId = UrlData[0];
+if (productId.IsEmpty()) {
+Response.Redirect("~/Admin/Products/");
+}
+var db = Database.Open("nickel");
+if (IsPost)
+{
+var sqlDelete = "DELETE FROM Products WHERE p_Id = @0";
+db.Execute(sqlDelete, productId);
+Response.Redirect("~/Admin/Products/");
+}
+var sqlSelect = "SELECT * FROM Products WHERE p_Id = @0";
+var product = db.QuerySingle(sqlSelect, productId);
+}
+<h1>Delete Product</h1>
+
+<p>
+Are you sure you want to delete the @product.p_name product?
+</p>
+<p style="margin:">
+<form action="" method="post" id="deleteForm">
+<input type="button" onclick="window.location = '@Href("~/Admin/Products/")';" value="Cancel" />
+<input type="submit" value="Delete" />
+</form>
+</p>

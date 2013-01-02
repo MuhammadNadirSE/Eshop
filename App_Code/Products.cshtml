@@ -1,0 +1,44 @@
+﻿@functions {
+public static string GetProductNameFromId(int productID)
+{
+var db = Database.Open("nickel");
+var sqlQuery = "SELECT p_name FROM Products WHERE p_ID = @0";
+return db.QuerySingle(sqlQuery, productID).p_name;
+}
+}
+
+
+
+@helper CategoriesDropDownList(string name, string selectedValue)
+{
+var optionList = new List<SelectListItem>();
+var db = Database.Open("nickel");
+var sqlCommand = "SELECT c_Id, c_name FROM Categories ORDER BY c_name";
+var result = db.Query(sqlCommand);
+foreach(var item in result)
+{
+optionList.Add(new SelectListItem { Value = item.c_Id.ToString(),
+Text = item.c_name });
+}
+@Html.DropDownList(name, null , optionList, selectedValue, null)
+}
+
+@helper ShowProductImage(string productId)
+{
+var imagePath = @"~/ProductImages/" + productId + ".png";
+if (!File.Exists(Server.MapPath(imagePath)))
+{
+imagePath = "~/ProductImages/noImage.png";
+}
+<img src="@Href(imagePath)" alt="Product Image"/>
+}
+
+@helper ShowProductThumbnail(string productId)
+{
+var imagePath = @"~/ProductImages/" + productId + "_thumb.png";
+if (!File.Exists(Server.MapPath(imagePath)))
+{
+imagePath = "~/ProductImages/noThumb.png";
+}
+<img src="@Href(imagePath)" alt="Product Image"/>
+}

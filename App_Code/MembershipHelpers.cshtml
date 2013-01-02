@@ -1,0 +1,30 @@
+﻿@helper AccountSummary()
+{
+
+    var cartItemCount = 0;
+    var user=WebSecurity.CurrentUserName;
+
+if (Session["cart"] != null)
+{
+    
+cartItemCount = ((Cart)Session["cart"]).Items.Count;
+}
+if(WebSecurity.IsAuthenticated) {
+<ul class="navbar nav">
+<li><a href="@Href("~/Account/ChangePassword")">Welcome @user</a></li>
+    <li><a href="@Href("~/Cart")">Cart - @cartItemCount item(s)</a></li>
+<li><a href="@Href("~/Account/Logout")">Logout</a></li>
+    @if (Roles.IsUserInRole( @user, "Admin"))
+{
+<li><a href="@Href("~/Admin/Default")">Admin</a></li>
+}
+
+</ul>
+} else {
+<ul class="navbar nav">
+<li><a href="@Href("~/Account/Login")">Login</a></li>
+<li><a href="@Href("~/Cart")">Cart - @cartItemCount item(s)</a></li>
+<li><a href="@Href("~/Account/Register")">Register</a></li>
+</ul>
+}
+}

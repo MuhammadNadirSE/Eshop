@@ -1,0 +1,17 @@
+﻿@{
+    var db = Database.Open("nickel");
+
+    var sqlSelectCat = "SELECT * FROM Categories";
+
+}
+
+            <div class="well sidebar-nav">
+                <h4>Categories</h4>
+                    <ul class="nav nav-list">
+                        
+                        @foreach (var category in db.Query(sqlSelectCat))
+                        {
+                            <li><a href="/shop/@category.c_name">@category.c_name</a></li>
+                        }
+                    </ul> 
+            </div> 

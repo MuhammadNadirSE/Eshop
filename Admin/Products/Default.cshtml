@@ -1,0 +1,33 @@
+﻿@{
+Layout = "~/Shared/Layout/_AdminLayout.cshtml";
+Page.Title = "Products";
+var db = Database.Open("nickel");
+var sqlCommand = "SELECT Products.P_Id, Products.p_name, Categories.C_name " +
+"FROM Products " +
+"INNER JOIN Categories ON Products.p_Category = Categories.C_Id " +
+"ORDER BY c_name";
+var result = db.Query(sqlCommand);
+var productsGrid = new WebGrid(source: result,rowsPerPage: 20);
+}
+<h1>Products Summary</h1>
+<hr>
+<a href="productDetails">Add New Product</a>
+<hr>
+<div class="grid">
+@productsGrid.GetHtml(
+tableStyle: "grid",
+headerStyle: "gridHeader",
+alternatingRowStyle: "gridAlt",
+footerStyle: "gridFooter",
+columns: productsGrid.Columns(
+productsGrid.Column("P_Id","Product ID - "),
+productsGrid.Column("P_name"," Product Title -"),
+productsGrid.Column("C_name","Category"),
+productsGrid.Column(null,null,
+format: @<text>
+<a href="ProductDetails/@item.P_Id">Update</a>
+<a href="DeleteProduct/@item.P_Id">Delete</a>
+</text>)
+)
+)
+</div>

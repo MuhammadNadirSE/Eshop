@@ -1,0 +1,82 @@
+﻿@{
+    Layout="~/shared/layout/_layout.cshtml";
+    int i=0;
+    Page.Title = "Cart";
+// Create a blank cart in Session if not present
+        if (Session["cart"] == null)
+        {
+            Session["cart"] = new Cart();
+        }
+// Get current cart from Session
+        Cart cart = (Cart)Session["cart"];
+
+        if (IsPost)
+        {
+            if (Request["productID"] != null)
+            {
+                var productID = Request["productID"];
+                var qty = Request["qty"];
+                var price = Request["price"];
+                cart.AddItem(productID.AsInt(), qty.AsInt(), price.AsFloat());
+            }
+            else if (Request["removeIndex"] != null)
+            {
+                var removeIndex = Request["removeIndex"].AsInt();
+                    cart.RemoveItem(removeIndex);
+            }
+        }
+}
+
+<h1>Shopping Cart</h1>
+@if(cart.Items.Count() == 0)
+{
+    <p>There are no items in your shopping cart.</p>
+}
+else
+{
+    <text>
+    <div class="span8">
+        
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total Price</th>
+      </tr>
+    </thead>
+
+    @foreach (var item in cart.Items)
+    {
+        <tr>
+            <td class="product">@Products.GetProductNameFromId(item.ProductID)</td>
+            <td class="size">@item.Qty</td>
+            <td class="price">£@item.Price</td>
+            <td class="price">£@(item.Price*item.Qty)</td>
+            <td class="remove">
+                <form action="Cart" method="post">
+                    @Html.Hidden("removeIndex", i)
+                    <input type="submit" value="Remove" />
+                </form>
+            </td>
+        </tr>
+        i++;
+    }
+    
+    <tr>
+        <td colspan="2">&nbsp;</td>
+        <td>Total: £@cart.TotalValue</td>
+        <td>&nbsp;</td>
+    </tr>
+    
+</table>
+  
+<div>
+<a href="/SHOP" class="linkButton">Continue Shopping</a>
+<a href="/Checkout" class="linkButton">Proceed to Checkout</a>
+</div>
+        </div>
+</text>
+          
+}

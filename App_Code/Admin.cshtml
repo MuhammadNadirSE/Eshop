@@ -1,0 +1,17 @@
+﻿// Admin Functions
+@functions {
+public static bool CategoryExists(string categoryTitle)
+{
+var db = Database.Open("nickel");
+var sqlQuery = "SELECT c_ID FROM Categories WHERE c_name = @0";
+return db.Query(sqlQuery, categoryTitle).Count() > 0;
+}
+
+public static bool CategoryIsEmpty(string categoryId)
+{
+var db = Database.Open("nickel");
+var sqlQuery = "SELECT P_ID FROM Products WHERE p_category = @0";
+return db.Query(sqlQuery, categoryId).Count() == 0;
+}
+
+}

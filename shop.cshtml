@@ -1,0 +1,43 @@
+﻿@{
+    Layout="~/shared/layout/_ShopLayout.cshtml";
+    var db = Database.Open("nickel");
+
+
+    var categoryTitle = UrlData[0];
+    var sqlSelectProd = "SELECT p_id, p_name, p_price FROM products " +
+                    "LEFT OUTER JOIN Categories ON Products.p_category = Categories.c_id " +
+                    "WHERE Categories.c_name = @0";
+    var products = db.Query(sqlSelectProd, categoryTitle);
+
+
+    }
+
+<div>
+                @if (products.Count() == 0)
+                {
+                        <h5>Try browsing one of the categories listed to the left.</h5>
+                }
+                else
+                {
+                    <h3>@categoryTitle</h3><br>
+                    <ul class="thumbnails">
+                            @foreach (var item in products) {
+                                <li class="span2">
+                                    <div class="thumbnail">
+                                    <h3>
+                                        <a href="~/productDetails/@item.p_id">@item.p_name</a>
+                                    </h3>
+                                    <p class="price">
+                                    £@item.p_price
+                                    </p>
+                                    <p>@Products.ShowProductThumbnail(item.p_ID.ToString())</p>
+                                    <p>
+                                        <a href="~/productDetails/@item.p_id" class="detailsButton">More Details</a>
+                                    </p>
+                                    </div>
+                                </li>
+                            }
+                    </ul>
+                }
+</div>
+

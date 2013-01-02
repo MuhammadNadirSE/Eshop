@@ -1,0 +1,46 @@
+﻿@{
+    Layout="~/shared/layout/_ShopLayout.cshtml";
+    var db = Database.Open("nickel");
+
+    var productID = !UrlData[0].IsEmpty() ? UrlData[0] : "0";
+    var sqlSelect = "SELECT * FROM Products WHERE p_id = @0";
+    var products = db.QuerySingle(sqlSelect, productID);
+
+
+    }
+
+
+        <div class="span10">
+                @if (products == null)
+                {
+                    <p>Product is not available</p>
+                }
+                else
+                {
+                    <div class="tabbable"> <!-- Only required for left/right tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active" ><a href="#" data-toggle="tab" ><h3 class="tab">@products.p_name</h3></a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                <p class="price">
+                                    £@products.p_price
+                                </p>
+                                
+                                <p>@products.p_description</p>
+                                <form action="~/Cart" method="post" class="form-inline">
+                                    <fieldset>
+                                        @Html.Hidden("productID", productID)
+                                        @Html.Hidden("price", products.p_price)
+                                        <input type="text" placeholder="Item quantity" name="qty">
+                                        <button type="submit" class="btn">Add to Cart</button>
+                                    </fieldset>
+                                </form>
+                                <p>@Products.ShowProductImage(productID)</p>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                }
+        </div><!--/span-->

@@ -1,0 +1,23 @@
+﻿@{
+    Layout="~/shared/layout/_MainLayout.cshtml";
+    var db = Database.Open("nickel");
+    var sqlSelect = "SELECT TOP 4 COUNT(productID) AS productCount, productId FROM OrderItems GROUP BY productID ORDER BY productCount DESC";
+    var mostPopular = db.Query(sqlSelect);
+}
+
+
+@if (mostPopular.Count() > 0)
+{
+
+<div class="body">
+    <h4>Popular Products</h4>
+        <table class="table">
+            <tr>
+            @foreach (var item in mostPopular) 
+            {
+                <td><a href="/ProductDetails/@item.productID" class="detailsButton">@Products.ShowProductThumbnail(item.productID.ToString())</a></td>
+            }
+            </tr>
+        </table>
+</div>
+}
